@@ -4,15 +4,29 @@
 
 ## Requirement:
 
-```text
 - NodeJS v16.14.0 or latest (x64 only)
-```
 
 ## Installing:
 
-```bash
+```powershell
 NPM: npm install jsmeow
 YARN: yarn add jsmeow
+```
+
+## Manual build:
+
+#### Requirement:
+
+- NodeJS v16.14.0 or latest (x64 only)
+- cmake >= 3.23
+- cmake-js >= 6.3.0
+
+#### Build:
+
+```powershell
+git clone https://github.com/droidxrx/JSMeow.git
+cd JSMeow
+npm run build-all
 ```
 
 ## Example Usage
