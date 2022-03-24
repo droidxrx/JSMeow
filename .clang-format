@@ -1,0 +1,24 @@
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Always
+ColumnLimit: 0
+AccessModifierOffset: -4
+NamespaceIndentation: All
+BreakBeforeBraces: Custom
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: false
+BraceWrapping:
+    AfterEnum: true
+    AfterStruct: false
+    AfterClass: true
+    SplitEmptyFunction: true
+    AfterControlStatement: false
+    AfterNamespace: false
+    AfterFunction: false
+    AfterUnion: false
+    AfterExternBlock: false
+    BeforeCatch: false
+    BeforeElse: false
+    SplitEmptyRecord: true
+    SplitEmptyNamespace: true

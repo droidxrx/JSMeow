@@ -1,0 +1,16 @@
+{
+	"configurations": [
+		{
+			"name": "JSMeow",
+			"includePath": ["${workspaceFolder}\\external\\include", "${workspaceFolder:✨ droidxrx}\\node_modules\\node-addon-api", "${env:LOCALAPPDATA}\\node-gyp\\Cache\\16.14.0\\include\\node"],
+			"forcedInclude": [],
+			"defines": ["UNICODE", "_UNICODE", "NAPI_DISABLE_CPP_EXCEPTIONS", "NAPI_VERSION=8", "GLFW_EXPOSE_NATIVE_WIN32", "GLEW_STATIC"],
+			"windowsSdkVersion": "10.0.17763.0",
+			"compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.16.27023/bin/Hostx64/x64/cl.exe",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"intelliSenseMode": "windows-msvc-x64"
+		}
+	],
+	"version": 4
+}

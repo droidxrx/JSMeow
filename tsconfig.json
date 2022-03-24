@@ -1,0 +1,7 @@
+{
+	"extends": "../../configs/tsconfig/tsconfig.base.json",
+	"compilerOptions": {
+		"module": "CommonJS",
+		"target": "es2022"
+	}
+}
