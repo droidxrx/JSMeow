@@ -66,6 +66,7 @@
 			"external",
 			"src",
 			".clang-format",
+			".gitignore",
 			"build.js",
 			"CMakeLists.txt",
 			"rollup.config.js",
