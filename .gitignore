@@ -1,5 +1,6 @@
 **/node_modules
 *.lock
+package
 packages
 package-lock.json
 build
