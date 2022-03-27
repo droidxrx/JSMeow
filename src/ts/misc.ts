@@ -1,11 +1,4 @@
-import {
-	isArray,
-	isBoolean,
-	isNumber,
-	isObject,
-	isString,
-	isVector3,
-} from './checking-params';
+import { isArray, isBoolean, isNumber, isObject, isString, isVector3 } from './checking-params';
 import { miscs, Overlay, Vector3 } from './addon';
 import vector from './vector';
 
@@ -28,17 +21,16 @@ export function pressKey(vkey: number) {
  * @param leftOrRight true=left | false=right
  */
 export function mouseClick(leftOrRight = true) {
-	if (!isBoolean(leftOrRight))
-		throw new TypeError('Parameter leftOrRight must be boolean');
+	if (!isBoolean(leftOrRight)) throw new TypeError('Parameter leftOrRight must be boolean');
 	miscs.mouseClick(leftOrRight);
 }
-export function mouseMove(overlay: Overlay, x: number, y: number) {
-	if (!isObject(overlay))
-		throw new TypeError('Parameter overlay must be object get from Function overlayInit');
+export async function mouseMove(x: number, y: number) {
 	if (!isNumber(x)) throw new TypeError('Parameter x must be number');
 	if (!isNumber(y)) throw new TypeError('Parameter y must be number');
 
-	miscs.mouseMove(overlay, x, y);
+	return new Promise<number>(function (resolve) {
+		resolve(miscs.mouseMove(x, y));
+	});
 }
 
 export function setForeground(winTitle: string) {
@@ -47,8 +39,7 @@ export function setForeground(winTitle: string) {
 }
 
 export function WorldToScreenOpenGL(overlay: Overlay, matrix: number[], pos: Vector3) {
-	if (!isObject(overlay))
-		throw new TypeError('Parameter overlay must be object get from Function overlayInit');
+	if (!isObject(overlay)) throw new TypeError('Parameter overlay must be object get from Function overlayInit');
 	if (!isArray(matrix)) throw new TypeError('Parameter matrix must be array float');
 	const isVec3 = isVector3(pos);
 	if (isVec3 !== true) throw new TypeError(isVec3);
@@ -73,8 +64,7 @@ export function WorldToScreenOpenGL(overlay: Overlay, matrix: number[], pos: Vec
 }
 
 export function WorldToScreenDirectX(overlay: Overlay, matrix: number[], pos: Vector3) {
-	if (!isObject(overlay))
-		throw new TypeError('Parameter overlay must be object get from Function overlayInit');
+	if (!isObject(overlay)) throw new TypeError('Parameter overlay must be object get from Function overlayInit');
 	if (!isArray(matrix)) throw new TypeError('Parameter matrix must be array float');
 	const isVec3 = isVector3(pos);
 	if (isVec3 !== true) throw new TypeError(isVec3);
