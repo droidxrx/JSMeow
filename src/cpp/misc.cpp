@@ -26,18 +26,14 @@ Value setForeground(const CallbackInfo &info) {
 }
 
 Value mouseMove(const CallbackInfo &info) {
-	Object ov = info[0].As<Object>();
-	int32_t midX = ov.Get("midX").As<Number>();
-	int32_t midY = ov.Get("midY").As<Number>();
-
 	INPUT input = {};
 	input.type = INPUT_MOUSE;
 	input.mi.dwFlags = MOUSEEVENTF_MOVE;
 	input.mi.time = 0;
-	input.mi.dx = (int32_t)info[1].As<Number>() - midX;
-	input.mi.dy = (int32_t)info[2].As<Number>() - midY;
-	SendInput(1, &input, sizeof(input));
-	return info.Env().Undefined();
+	input.mi.dx = info[0].As<Number>().FloatValue();
+	input.mi.dy = info[1].As<Number>().FloatValue();
+	UINT result = SendInput(1, &input, sizeof(input));
+	return Value::From(info.Env(), result);
 }
 
 Value mouseClick(const CallbackInfo &info) {
