@@ -9,15 +9,6 @@ const ts = require('rollup-plugin-ts');
 const { writeJson } = require('fs-extra');
 const pkgjson = require('./package.json');
 
-delete pkgjson.devDependencies;
-for (const key of Object.keys(pkgjson.scripts)) if (key !== 'install') delete pkgjson.scripts[key];
-
-const pkgjsonprebuild = { ...pkgjson };
-pkgjsonprebuild.version += '-napi';
-delete pkgjsonprebuild.gypfile;
-delete pkgjsonprebuild.scripts;
-delete pkgjsonprebuild.dependencies['node-addon-api'];
-
 let rollupConfig;
 const mode = process.env.NODE_ENV.trim();
 const outputCJS = 'index.commonjs.js';
@@ -79,10 +70,17 @@ if (mode === 'production') {
 					name: 'write-package-json',
 					buildEnd: async () => {
 						try {
+							delete pkgjson.devDependencies;
+							for (const key of Object.keys(pkgjson.scripts)) if (key !== 'install') delete pkgjson.scripts[key];
+
 							await writeJson('./publish/normal/package.json', pkgjson);
 							console.log('Write package.json for normal build done.');
 
-							await writeJson('./publish/prebuild/package.json', pkgjsonprebuild);
+							pkgjson.version += '-napi';
+							delete pkgjson.gypfile;
+							delete pkgjson.scripts;
+							delete pkgjson.dependencies['node-addon-api'];
+							await writeJson('./publish/prebuild/package.json', pkgjson);
 							console.log('Write package.json for prebuild done.');
 						} catch (error) {
 							console.log(error.message);
