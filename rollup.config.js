@@ -16,6 +16,7 @@ const pkgjsonprebuild = { ...pkgjson };
 pkgjsonprebuild.version += '-napi';
 delete pkgjsonprebuild.gypfile;
 delete pkgjsonprebuild.scripts;
+delete pkgjsonprebuild.dependencies['node-addon-api'];
 
 let rollupConfig;
 const mode = process.env.NODE_ENV.trim();
