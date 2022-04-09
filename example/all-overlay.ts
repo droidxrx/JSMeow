@@ -1,79 +1,54 @@
-import JSMeow from '../';
+import { overlay, draws, vector2, waitsLoop, colors } from '../';
 
-void (async function () {
-	const overlay = JSMeow.overlayInit('FullScreen', 35, 25);
-	const Font = JSMeow.overlayFontInit(12, 'Impact');
+async function main() {
+	const { center } = overlay.init('Untitled - Notepad', false, 0x23);
+	const font = overlay.fontInit(12, 'Impact');
 
-	const x = overlay.midX + 200;
-	const y = overlay.midY;
+	const x = center.x + 200;
+	const y = center.y;
 	const barLength = 300;
 	const barWidth = 5;
 	const maxHealth = 200;
 	let currenHealth = maxHealth;
 
+	const pointY = center.y - 175;
 	const points1 = [
-		{ x: 120 + 120, y: 250 + overlay.midY - 175 },
-		{ x: 400 + 120, y: 250 + overlay.midY - 175 },
-		{ x: 400 + 120, y: 350 + overlay.midY - 175 },
-		{ x: 450 + 120, y: 200 + overlay.midY - 175 },
-		{ x: 120 + 120, y: 250 + overlay.midY - 175 },
+		vector2.create(120 + 120, 250 + pointY),
+		vector2.create(400 + 120, 250 + pointY),
+		vector2.create(400 + 120, 350 + pointY),
+		vector2.create(450 + 120, 200 + pointY),
+		vector2.create(120 + 120, 250 + pointY),
 	];
 
 	const points2 = [
-		{ x: 120 + 450, y: 250 + overlay.midY - 175 },
-		{ x: 400 + 450, y: 250 + overlay.midY - 175 },
-		{ x: 400 + 450, y: 350 + overlay.midY - 175 },
-		{ x: 450 + 450, y: 200 + overlay.midY - 175 },
-		{ x: 120 + 450, y: 250 + overlay.midY - 175 },
+		vector2.create(120 + 450, 250 + pointY),
+		vector2.create(400 + 450, 250 + pointY),
+		vector2.create(400 + 450, 350 + pointY),
+		vector2.create(450 + 450, 200 + pointY),
+		vector2.create(120 + 450, 250 + pointY),
 	];
 
-	const color = {
-		red: [255, 0, 0],
-		green: [0, 128, 0],
-		blue: [0, 0, 255],
-	};
-
-	while (JSMeow.overlayLoop(overlay, true)) {
-		JSMeow.drawText(Font, 10, overlay.midY, 'drawText', color.red);
-		JSMeow.drawTextLines(Font, 70, overlay.midY, ['drawTextLines1', 'drawTextLines2', 'drawTextLines3'], color.red, 2.0);
-
-		JSMeow.drawPixel(175, overlay.midY + 5, color.red);
-		JSMeow.drawPixelV({ x: 175, y: overlay.midY - 5 }, color.red);
-
-		JSMeow.drawBox(185, overlay.midY - 45, 30, 50, 1.5, color.red);
-		JSMeow.drawBoxV({ x: 220, y: overlay.midY - 45 }, 30, 50, 1.5, color.red);
-
-		JSMeow.drawAlphaBox(255, overlay.midY - 45, 30, 50, color.blue, color.red, 0.3);
-		JSMeow.drawAlphaBoxV({ x: 290, y: overlay.midY - 45 }, 30, 50, color.blue, color.red, 0.3);
-
-		JSMeow.drawCornerBox(325, overlay.midY - 45, 30, 50, color.red, color.green, 1.5);
-		JSMeow.drawCornerBoxV({ x: 360, y: overlay.midY - 45 }, 30, 50, color.red, color.green, 1.5);
-
-		JSMeow.drawLine(400, overlay.midY + 5, 400, overlay.midY - 50, 1.5, color.green);
-		JSMeow.drawLineV({ x: 405, y: overlay.midY + 5 }, { x: 455, y: overlay.midY + 5 }, 1.5, color.green);
-
-		JSMeow.drawDashedLine(470, overlay.midY + 5, 470, overlay.midY - 90, 1.5, color.green);
-		JSMeow.drawDashedLineV({ x: 475, y: overlay.midY + 5 }, { x: 570, y: overlay.midY + 5 }, 1.5, color.green);
-
-		JSMeow.drawCircle(620, overlay.midY - 50, 50, color.green, false);
-		JSMeow.drawCircleV({ x: 725, y: overlay.midY - 50 }, 50, color.green, true);
-
-		JSMeow.drawRadCircle(830, overlay.midY - 50, 50, 0, 180, color.green);
-		JSMeow.drawRadCircleV({ x: 935, y: overlay.midY - 50 }, 50, 180, 360, color.green);
-
-		JSMeow.drawPoly(55, overlay.midY + 60, 50, 120, 2, color.green);
-		JSMeow.drawPolyV({ x: 155, y: overlay.midY + 60 }, 50, 25, 2, color.green);
-
-		JSMeow.drawCustomShape(points1, color.green, false);
-		JSMeow.drawCustomShape(points2, color.green, true, 0.5);
-
-		JSMeow.drawValueBar(x, y, x, y + barLength, barWidth, maxHealth, currenHealth);
-		JSMeow.drawValueBar(x, y - 12, x + barLength, y - 12, barWidth, maxHealth, currenHealth, false);
-		JSMeow.drawCornerBox(x + 7, y, barLength - 7, barLength, [255, 255, 255], [0, 0, 0], 1.5);
-
+	while (overlay.loop(true)) {
+		await waitsLoop(1);
+		draws.text(font, 10, center.y, 'drawText', colors.red);
+		draws.textLines(font, 70, center.y, ['drawTextLines1', 'drawTextLines2', 'drawTextLines3'], colors.red, 2.0);
+		draws.pixel(175, center.y + 5, colors.red);
+		draws.box(185, center.y - 45, 30, 50, 1.5, colors.red);
+		draws.alphaBox(255, center.y - 45, 30, 50, colors.blue, colors.red, 0.3);
+		draws.cornerBox(325, center.y - 45, 30, 50, colors.red, colors.green, 1.5);
+		draws.line(400, center.y + 5, 400, center.y - 50, 1.5, colors.green);
+		draws.dashLine(470, center.y + 5, 470, center.y - 90, 1.5, 2, null, colors.red, 2);
+		draws.circle(620, center.y - 50, 50, colors.green, false);
+		draws.radCircle(830, center.y - 50, 50, 0, 180, colors.green);
+		draws.poly(55, center.y + 60, 50, 120, 2, colors.green);
+		draws.customShape(points1, colors.green, false, 0.5);
+		draws.customShape(points2, colors.green, true, 0.5);
+		draws.valueBar(x, y, x, y + barLength, barWidth, maxHealth, currenHealth, true);
+		draws.valueBar(x, y - 12, x + barLength, y - 12, barWidth, maxHealth, currenHealth, false);
+		draws.cornerBox(x + 7, y, barLength - 7, barLength, [255, 255, 255], [0, 0, 0], 1.5);
 		if (currenHealth === 0) currenHealth = maxHealth;
 		else currenHealth -= 1;
-
-		await JSMeow.waits(1);
 	}
-})();
+}
+
+void main();

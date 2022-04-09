@@ -1,7 +1,7 @@
-**/node_modules
-*.lock
-package
-packages
-package-lock.json
 build
 dist
+node_modules
+*.lock
+*.error
+node-addon-api
+publish

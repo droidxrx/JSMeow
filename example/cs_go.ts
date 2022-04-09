@@ -1,180 +1,112 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access */
-import {  drawCornerBox, drawDashedLine, drawText, drawValueBar, JSMemory as mem, overlayFontInit, overlayInit, overlayLoop,vector2, Vector2, vector3, Vector3, vector3Distance, waits, WorldToScreenDirectX } from '../'; // prettier-ignore
-import { get as fetch } from 'superagent';
+import { memory, waitsLoop, vector3, overlay, WorldToScreenDirectX, draws, colors } from '..';
 
-interface Offset {
-	m_iHealth: number;
-	m_bDormant: number;
-	m_iTeamNum: number;
-	m_dwBoneMatrix: number;
-	m_vecOrigin: number;
-	dwRadarBase: number;
-	dwGlowObjectManager: number;
-	m_iGlowIndex: number;
-	m_iCrosshairId: number;
-	dwLocalPlayer: number;
-	dwEntityList: number;
-	dwViewMatrix: number;
-}
-
-async function getcsgojson(): Promise<Offset> {
-	try {
-		/**
-		 * Credits to https://github.com/frk1/hazedumper
-		 * Offset Counter-Strike: Global Offensive Patch 1.38.2.2 (version 1443)
-		 */
-		const url = 'https://cdn.jsdelivr.net/gh/frk1/hazedumper@d03933a/csgo.json';
-		const { body } = await fetch(url);
-		return { ...body.signatures, ...body.netvars };
-	} catch (error) {
-		const msg: string = error.response.text;
-		throw new Error(msg);
-	}
-}
-
-function getMatrix(address: number): number[] {
-	const result: number[] = [];
-	for (let i = 0; i < 16; i++) result.push(mem.readFloat(address + 0x4 * i));
-	return result;
-}
-
-function getEntityAddr(address: number, localPlayerAddr: number): number[] {
-	const result: number[] = [];
-	for (let i = 0; i < 10; i++) {
-		const tempAddr = mem.readDword(address + 0x10 * i);
-		localPlayerAddr !== tempAddr && result.push(tempAddr);
-	}
-	return result;
-}
-
-const colors = {
-	orange: [255, 165, 0],
-	cyan: [0, 255, 255],
-	black: [0, 0, 0],
-	white: [255, 255, 255],
-	red: [255, 0, 0],
-	silver: [192, 192, 192],
+const Offsets = {
+	dwClientState: 5820356,
+	dwClientState_State: 264,
+	dwClientState_ViewAngles: 19856,
+	dwLocalPlayer: 14378460,
+	dwEntityList: 81601628,
+	dwViewMatrix: 81542516,
+	dwRadarBase: 86012372,
+	m_bDormant: 237,
+	m_aimPunchAngle: 12348,
+	m_dwBoneMatrix: 9896,
+	m_iHealth: 256,
+	m_iTeamNum: 244,
+	m_lifeState: 607,
+	m_vecOrigin: 312,
+	m_vecVelocity: 276,
+	m_vecViewOffset: 264,
+	perMatrix: [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60],
+	// eslint-disable-next-line max-len
+	perEntity: [0, 16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512, 528, 544, 560, 576, 592, 608, 624, 640, 656, 672, 688, 704, 720, 736, 752, 768, 784, 800, 816, 832, 848, 864, 880, 896, 912, 928, 944, 960, 976, 992, 1008 ], // prettier-ignore
 };
 
-class Entity {
-	address: number;
-	gameModule: number;
-	dwRadarBase: number;
-	wts: Vector2 | false;
+function getLocalPlayer(address: number) {
+	const baseAddress = memory.readMemory(address, 'dword');
 
-	id: number;
-	name: string | null;
-	health: number;
-	dormant: number;
-	team: number;
-	bone_base: number;
-	pos: Vector3;
+	if (baseAddress === 0) return false;
 
-	constructor(address: number, gameModule: number, offset: Offset) {
-		this.wts = vector2();
-		this.address = address;
-		this.gameModule = gameModule;
-		this.dwRadarBase = offset.dwRadarBase;
+	return {
+		address: baseAddress,
+		team: memory.readMemory(baseAddress + Offsets.m_iTeamNum, 'int'),
+		pos: memory.readMemory(baseAddress + Offsets.m_vecOrigin, 'vector3'),
+	};
+}
 
-		this.id = mem.readDword(this.address + 0x64);
-		this.name = null;
-		this.health = mem.readDword(this.address + offset.m_iHealth);
-		this.dormant = mem.readDword(this.address + offset.m_bDormant);
-		this.team = mem.readDword(this.address + offset.m_iTeamNum);
-		this.bone_base = mem.readDword(this.address + offset.m_dwBoneMatrix);
-		this.pos = mem.readVector3(this.address + offset.m_vecOrigin);
-	}
+function EntityList(address: number) {
+	const boneBase = memory.readMemory(address + Offsets.m_dwBoneMatrix, 'dword');
+	const id = memory.readMemory(address + 0x64, 'int');
+	return {
+		id,
+		boneBase,
+		team: memory.readMemory(address + Offsets.m_iTeamNum, 'int'),
+		health: memory.readMemory(address + Offsets.m_iHealth, 'int'),
+		pos: memory.readMemory(address + Offsets.m_vecOrigin, 'vector3'),
+		name: <string | null>null,
+		bonePos(boneID: number) {
+			return vector3.create(
+				memory.readMemory(boneBase + 0x30 * boneID + 0x0c, 'float'),
+				memory.readMemory(boneBase + 0x30 * boneID + 0x1c, 'float'),
+				memory.readMemory(boneBase + 0x30 * boneID + 0x2c, 'float')
+			);
+		},
+		getName(clientBase: number) {
+			const radar_base = memory.readMemory(clientBase + Offsets.dwRadarBase, 'dword');
+			const hud_radar = memory.readMemory(radar_base + 0x78, 'dword');
+			return memory.readMemory(hud_radar + 0x300 + 0x174 * (id - 1), 'string');
+		},
+	};
+}
 
-	getName() {
-		const radar_base = mem.readDword(this.gameModule + this.dwRadarBase);
-		const hud_radar = mem.readDword(radar_base + 0x78);
-		return mem.readString(hud_radar + 0x300 + 0x174 * (this.id - 1));
-	}
+async function main() {
+	const { th32ProcessID } = memory.openProcess('csgo.exe');
+	const clientBase = memory.findModule('client.dll', th32ProcessID).modBaseAddr;
+	const engineBase = memory.findModule('engine.dll', th32ProcessID).modBaseAddr;
+	const { center: centerOV, height: ovHeight } = overlay.init('Counter-Strike: Global Offensive - Direct3D 9', false, 0x23);
+	const font = overlay.fontInit(10, 'Tahoma');
 
-	bonePos(bone_id: number) {
-		return vector3(
-			mem.readFloat(this.bone_base + 0x30 * bone_id + 0x0c),
-			mem.readFloat(this.bone_base + 0x30 * bone_id + 0x1c),
-			mem.readFloat(this.bone_base + 0x30 * bone_id + 0x2c)
-		);
+	while (overlay.loop(true)) {
+		await waitsLoop(1);
+
+		const clientState = memory.readMemory(engineBase + Offsets.dwClientState, 'dword');
+		const isNotInGame = memory.readMemory(clientState + Offsets.dwClientState_State, 'int') !== 6;
+
+		if (isNotInGame) continue;
+
+		const localLPlayer = getLocalPlayer(clientBase + Offsets.dwLocalPlayer);
+
+		if (!localLPlayer) continue;
+
+		const viewMatrix = Offsets.perMatrix.map((offset) => memory.readMemory(clientBase + Offsets.dwViewMatrix + offset, 'float'));
+
+		draws.circle(centerOV.x, centerOV.y, 90, colors.blue, false);
+		for await (const entityIndex of Offsets.perEntity) {
+			const entityAddress = memory.readMemory(clientBase + Offsets.dwEntityList + entityIndex, 'dword');
+			if (entityAddress !== localLPlayer.address && entityAddress !== 0) {
+				const entity = EntityList(entityAddress);
+				if (entity.team !== localLPlayer.team && entity.health > 0 && entity.health <= 100) {
+					const pos2d = WorldToScreenDirectX(centerOV, viewMatrix, entity.pos);
+					const headPos = WorldToScreenDirectX(centerOV, viewMatrix, entity.bonePos(8));
+
+					if (pos2d && headPos) {
+						entity.name = entity.getName(clientBase);
+						const head = headPos.y - pos2d.y;
+						const width = head / 2;
+						const center = width / -2;
+
+						draws.cornerBox(pos2d.x + center, pos2d.y, width, head + 5, colors.orange, colors.black, 0.3);
+						draws.valueBar(pos2d.x + center - 5, pos2d.y, pos2d.x + center - 5, headPos.y + 5, 2, 100, entity.health, true);
+						draws.dashLine(centerOV.x, ovHeight, pos2d.x, headPos.y + 10, 0.5, 2, null, colors.red, 1);
+						draws.text(font, pos2d.x - entity.name.length * 1.5, pos2d.y - 10, entity.name, colors.silver);
+
+						const entDist = (vector3.distance(entity.pos, localLPlayer.pos) / 20).toFixed() + 'm';
+						draws.text(font, pos2d.x - entDist.length * 1.5, headPos.y + 10, entDist, colors.white);
+					}
+				}
+			}
+		}
 	}
 }
 
-void (async function () {
-	const offset = await getcsgojson();
-	const { th32ProcessID: processId } = mem.openProcess('csgo.exe');
-	const { modBaseAddr: gameModule } = mem.findModule('client.dll', processId);
-
-	// const overlay = overlayInit(); // windowed fullscreen
-	const overlay = overlayInit('Counter-Strike: Global Offensive - Direct3D 9');
-	const font = overlayFontInit(10, 'Tahoma');
-	// setForeground('Counter-Strike: Global Offensive - Direct3D 9'); // windowed fullscreen need to call function setForeground
-
-	while (overlayLoop(overlay)) {
-		const localPlayerAddr = mem.readDword(gameModule + offset.dwLocalPlayer);
-		if (localPlayerAddr === 0) continue; // no localplayer
-
-		const localEntity = new Entity(localPlayerAddr, gameModule, offset);
-		const viewMatrix = getMatrix(gameModule + offset.dwViewMatrix);
-
-		const entityAddr = getEntityAddr(gameModule + offset.dwEntityList, localPlayerAddr);
-		for (const entAddr of entityAddr) {
-			if (entAddr === 0) continue;
-
-			const ent = new Entity(entAddr, gameModule, offset);
-			if (ent.team === localEntity.team || (ent.dormant && ent.health === 0)) continue;
-
-			ent.wts = WorldToScreenDirectX(overlay, viewMatrix, ent.pos);
-			if (ent.wts === false) continue;
-
-			const headPos = WorldToScreenDirectX(overlay, viewMatrix, ent.bonePos(8));
-			if (headPos === false) continue;
-
-			ent.name = ent.getName();
-			const head = headPos.y - ent.wts.y;
-			const width = head / 2;
-			const center = width / -2;
-
-			drawCornerBox(
-				ent.wts.x + center,
-				ent.wts.y,
-				width,
-				head + 5,
-				ent.team !== 2 ? colors.cyan : colors.orange,
-				colors.black,
-				0.3
-			);
-
-			drawValueBar(
-				ent.wts.x + center - 5,
-				ent.wts.y,
-				ent.wts.x + center - 5,
-				headPos.y + 5,
-				2,
-				100,
-				ent.health
-			);
-
-			drawDashedLine(overlay.midX, 0, ent.wts.x, ent.wts.y, 1, colors.red);
-
-			drawText(
-				font,
-				ent.wts.x - ent.name.length * 1.5,
-				ent.wts.y - 10,
-				ent.name,
-				colors.silver
-			);
-
-			const entDist = (vector3Distance(ent.pos, localEntity.pos) / 20).toFixed() + 'm';
-			drawText(
-				font,
-				ent.wts.x - entDist.length * 1.5,
-				headPos.y + 10,
-				entDist,
-				colors.white
-			);
-		}
-
-		await waits(5); // recommended value less then 20
-	}
-})();
+void main();

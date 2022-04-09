@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"module": "ES2022",
+		"target": "ES2022",
+		"esModuleInterop": true,
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"alwaysStrict": false,
+		"noImplicitUseStrict": true,
+		"keyofStringsOnly": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"strictNullChecks": true,
+		"noImplicitAny": false,
+		"allowJs": false,
+		"removeComments": true,
+		"pretty": false,
+		"resolveJsonModule": true
+	}
+}

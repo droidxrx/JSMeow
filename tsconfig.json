@@ -1,7 +1,10 @@
 {
-	"extends": "../../configs/tsconfig/tsconfig.base.json",
-	"compilerOptions": {
-		"module": "CommonJS",
-		"target": "es2022"
-	}
+	"extends": "./tsconfig.eslint.json",
+	"ts-node": {
+		"compilerOptions": {
+			"module": "CommonJS"
+		}
+	},
+	"include": ["**/**/*.ts"],
+	"exclude": ["./*.js", "./*.json"]
 }

@@ -1,74 +1,121 @@
 # JSMeow - Small Tool Hacking game
 
-## NodeJS for external Game Hacking (Windows only)
+### NodeJS for external Game Hacking (Windows only)
 
-## Requirement:
+This is a [Node.js](https://nodejs.org/en/) module available through the
+[npm registry](https://www.npmjs.com/).
 
-- NodeJS v16.14.0 or latest (x64 only)
+Before installing, [download and install Node.js](https://nodejs.org/en/download/).
+Node.js 16.14.0 or higher is required.
 
-## Installing:
+Installation is done using the
+[`npm install` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
 
-```powershell
-NPM: npm install jsmeow
-YARN: yarn add jsmeow
+## Installation
+
+#### manual build version:
+
+manual build version require [node-gyp](https://www.npmjs.com/package/node-gyp).
+
+```console
+> npm install jsmeow
 ```
 
-## Manual build:
+#### prebuild version:
 
-#### Requirement:
-
-- NodeJS v16.14.0 or latest (x64 only)
-- cmake >= 3.23
-- cmake-js >= 6.3.0
-
-#### Build:
-
-```powershell
-git clone https://github.com/droidxrx/JSMeow.git
-cd JSMeow
-npm run build-all
+```console
+> npm install jsmeow@n-api
 ```
 
-## Example Usage
+#### note please install Visual C++ Redistributable latest
 
-```javascript
-const JSMeow = require("jsmeow") // cjs
-import JSMeow from "jsmeow" // esm
-// or with selection
-const {JSMemory, vector3, drawCornerBox, ...etc} = require("jsmeow") // cjs
-import {JSMemory, vector3, drawCornerBox, ...etc} from "jsmeow" // esm
+## Features
 
-void (async function () {
-	const mem = JSMeow.JSMemory
-	const { th32ProcessID: processId } = mem.openProcess('csgo.exe')
-	const { modBaseAddr } = mem.findModule('client.dll', processId)
+- memory
+  - signatureTypes
+  - Debugger
+  - openProcess
+  - closeProcess
+  - getProcesses
+  - findModule
+  - getModules
+  - readMemory
+  - readBuffer
+  - writeMemory
+  - writeBuffer
+  - findPattern
+  - findPatternByModule
+  - findPatternByAddress
+  - callFunction
+  - virtualAllocEx
+  - virtualProtectEx
+  - getRegions
+  - virtualQueryEx
+  - attachDebugger
+  - detatchDebugger
+  - awaitDebugEvent
+  - handleDebugEvent
+  - setHardwareBreakpoint
+  - removeHardwareBreakpoint
+  - injectDll
+  - unloadDll
+  - STRUCTRON_TYPE_STRING
+- Struct (class)
+- overlay
+  - init
+  - deInit
+  - update
+  - close
+  - loop
+  - setPosition
+  - fontInit
+  - fontDeInit
+- draws
+  - text
+  - textLines
+  - pixel
+  - box
+  - alphaBox
+  - cornerBox
+  - line
+  - dashLine
+  - circle
+  - radCircle
+  - valueBar
+  - poly
+  - customShape
+- vector2
+  - create
+  - addition
+  - subtraction
+  - multiplication
+  - division
+  - magnitude
+  - distance
+  - closest
+- vector3
+  - create
+  - addition
+  - subtraction
+  - multiplication
+  - division
+  - magnitude
+  - distance
+  - closest
+- isKeyPressed
+- pressKey
+- mouseMove
+- mouseClick
+- setForeground
 
-	// const overlay = overlayInit(); // windowed fullscreen
-	const overlay = JSMeow.overlayInit('window title'); // windowed mode
-	const font = JSMeow.overlayFontInit(10, 'Tahoma');
-	// setForeground('Counter-Strike: Global Offensive - Direct3D 9') windowed fullscreen need to call function setForeground
+#### See [example](https://github.com/droidxrx/JSMeow/tree/master/example)
 
-	const localPlayer = mem.readDword(address)
-	const findPatern = mem.findPattern("AB ?? ?? FF 00")
-	const findPatern = mem.findPatternByAddress(baseAddress, "AB ?? ?? FF 00")
-	const findPatern = mem.findPatternByModule("xxxx.dll", "AB ?? ?? FF 00")
-	while(JSMeow.overlayLoop(overlay)) {
-		JSMeow.drawDashedLine(x1, y1, x2, y2, lineWidth, colors);
-		await JSMeow.waits(5); // recommended value less then 20
-	}
-})()
-```
+## [CS:GO](https://github.com/droidxrx/JSMeow/tree/master/example/cs_go.ts)
 
-## [CS:GO](example/cs_go.ts)
+[![](https://cdn.discordapp.com/attachments/954962300866035722/962451273326661652/CSGO.png)](https://github.com/droidxrx/JSMeow/tree/master/example/cs_go.ts)
 
-[![](https://cdn.discordapp.com/attachments/954962300866035722/955787171959304192/CSGO.png)](example/cs_go.ts)
+## [All Overlay](https://github.com/droidxrx/JSMeow/tree/master/example/all-overlay.ts)
 
-## [AssaultCube](example/assault-cube.ts)
-
-[![](https://cdn.discordapp.com/attachments/954962300866035722/955682302388764682/AssaultCube_1.3_Lockdown-Edition.png)](example/assault-cube.ts)
-
-## [All Overlay](example/all-overlay.ts)
-
-[![](https://cdn.discordapp.com/attachments/954962300866035722/954962418725969960/JSMeow-All-Overlay.gif)](example/all-overlay.ts)
+[![](https://cdn.discordapp.com/attachments/954962300866035722/954962418725969960/JSMeow-All-Overlay.gif)](https://github.com/droidxrx/JSMeow/tree/master/example/all-overlay.ts)
 
 ### Thank to [qb-0](https://github.com/qb-0/PyMeow) & [Rob--](https://github.com/Rob--/memoryjs) ❤️
