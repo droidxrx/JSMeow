@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import Memory from './memory';
 import path from 'path';
 import fs from 'fs';
@@ -23,31 +24,17 @@ export default {
 	},
 	vector2: addon.vector2,
 	vector3: addon.vector3,
-	isKeyPressed(vKey: number) {
-		return addon.isKeyPressed(vKey);
-	},
-	pressKey(vKey: number) {
-		return addon.pressKey(vKey);
-	},
-	mouseMove(x: number, y: number) {
-		return addon.mouseMove(x, y);
-	},
-	mouseClick(leftOrRight: boolean) {
-		return addon.mouseClick(leftOrRight);
-	},
-	setForeground(windowTitle: string) {
-		return addon.setForeground(windowTitle);
-	},
+	isKeyPressed: addon.isKeyPressed,
+	pressKey: addon.pressKey,
+	mouseMove: addon.mouseMove,
+	mouseClick: addon.mouseClick,
+	setForeground: addon.setForeground,
 	async waitsLoop(ms = 0) {
 		return new Promise<void>((resolve) => {
 			setTimeout(resolve, ms);
 		});
 	},
 	memory: new Memory(<Record<string, any>>addon.memory),
-	WorldToScreenOpenGL(centerWindow: { x: number; y: number }, matrix: number[], pos: { x: number; y: number; z: number }) {
-		return worldToScreen.WorldToScreenOpenGL(centerWindow, matrix, pos);
-	},
-	WorldToScreenDirectX(centerWindow: { x: number; y: number }, matrix: number[], pos: { x: number; y: number; z: number }) {
-		return worldToScreen.WorldToScreenDirectX(centerWindow, matrix, pos);
-	},
+	WorldToScreenOpenGL: worldToScreen.WorldToScreenOpenGL,
+	WorldToScreenDirectX: worldToScreen.WorldToScreenDirectX,
 };

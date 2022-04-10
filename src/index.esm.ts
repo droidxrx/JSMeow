@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import Memory from './memory';
 import structron from 'structron-v2';
 import { dlopen } from 'process';
@@ -28,23 +29,15 @@ export const draws = {
 		addon.draws.dashLine(x1, y1, x2, y2, lineWidth, factor, pattern ?? 3855, color, alpha);
 	},
 };
+
 export const vector2 = addon.vector2;
 export const vector3 = addon.vector3;
-export function isKeyPressed(vKey: number) {
-	return addon.isKeyPressed(vKey);
-}
-export function pressKey(vKey: number) {
-	return addon.pressKey(vKey);
-}
-export function mouseMove(x: number, y: number) {
-	return addon.mouseMove(x, y);
-}
-export function mouseClick(leftOrRight: boolean) {
-	return addon.mouseClick(leftOrRight);
-}
-export function setForeground(windowTitle: string) {
-	return addon.setForeground(windowTitle);
-}
+export const isKeyPressed = addon.isKeyPressed;
+export const pressKey = addon.pressKey;
+export const mouseMove = addon.mouseMove;
+export const mouseClick = addon.mouseClick;
+export const setForeground = addon.setForeground;
+
 export async function waitsLoop(ms = 0) {
 	return new Promise<void>((resolve) => {
 		setTimeout(resolve, ms);
@@ -52,12 +45,9 @@ export async function waitsLoop(ms = 0) {
 }
 export const memory = new Memory(<Record<string, any>>addon.memory);
 
-export function WorldToScreenOpenGL(centerWindow: { x: number; y: number }, matrix: number[], pos: { x: number; y: number; z: number }) {
-	return worldToScreen.WorldToScreenOpenGL(centerWindow, matrix, pos);
-}
-export function WorldToScreenDirectX(centerWindow: { x: number; y: number }, matrix: number[], pos: { x: number; y: number; z: number }) {
-	return worldToScreen.WorldToScreenDirectX(centerWindow, matrix, pos);
-}
+export const WorldToScreenOpenGL = worldToScreen.WorldToScreenOpenGL;
+export const WorldToScreenDirectX = worldToScreen.WorldToScreenDirectX;
+
 export default {
 	Struct,
 	colors,
