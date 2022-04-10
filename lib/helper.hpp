@@ -25,7 +25,6 @@ vec3 getVec3(Object obj);
 float getNapiFloat(Value value);
 bool checkVec2(Object obj);
 bool checkVec3(Object obj);
-bool checkObject(Value value);
 
 void pixelDraw(float x, float y, rgbColor color);
 void boxDraw(float x, float y, float width, float height, float lineWidth, rgbColor color);

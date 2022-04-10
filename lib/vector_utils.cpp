@@ -74,7 +74,7 @@ Value vector2_addition(const CallbackInfo &info)
 	Env env = info.Env();
 	Object result = Object::New(env);
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector2").ThrowAsJavaScriptException();
 		return env.Null();
@@ -98,7 +98,7 @@ Value vector3_addition(const CallbackInfo &info)
 	Env env = info.Env();
 	Object result = Object::New(env);
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector3").ThrowAsJavaScriptException();
 		return env.Null();
@@ -124,7 +124,7 @@ Value vector2_subtraction(const CallbackInfo &info)
 	Env env = info.Env();
 	Object result = Object::New(env);
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector2").ThrowAsJavaScriptException();
 		return env.Null();
@@ -149,7 +149,7 @@ Value vector3_subtraction(const CallbackInfo &info)
 	Env env = info.Env();
 	Object result = Object::New(env);
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector3").ThrowAsJavaScriptException();
 		return env.Null();
@@ -175,7 +175,7 @@ Value vector2_multiplication(const CallbackInfo &info)
 	Env env = info.Env();
 	Object result = Object::New(env);
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector2").ThrowAsJavaScriptException();
 		return env.Null();
@@ -199,7 +199,7 @@ Value vector3_multiplication(const CallbackInfo &info)
 	Env env = info.Env();
 	Object result = Object::New(env);
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector3").ThrowAsJavaScriptException();
 		return env.Null();
@@ -225,7 +225,7 @@ Value vector2_division(const CallbackInfo &info)
 	Env env = info.Env();
 	Object result = Object::New(env);
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector2").ThrowAsJavaScriptException();
 		return env.Null();
@@ -249,7 +249,7 @@ Value vector3_division(const CallbackInfo &info)
 	Env env = info.Env();
 	Object result = Object::New(env);
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector3").ThrowAsJavaScriptException();
 		return env.Null();
@@ -275,7 +275,7 @@ Value vector2_magnitude(const CallbackInfo &info)
 	Env env = info.Env();
 	float x, y;
 
-	if (info.Length() < 1 || !checkObject(info[0]))
+	if (info.Length() < 1 || !info[0].IsObject())
 	{
 		Error::New(env, "requires 1 arguments, first argument must a vector2").ThrowAsJavaScriptException();
 		return env.Null();
@@ -300,7 +300,7 @@ Value vector3_magnitude(const CallbackInfo &info)
 	Env env = info.Env();
 	float x, y, z;
 
-	if (info.Length() < 1 || !checkObject(info[0]))
+	if (info.Length() < 1 || !info[0].IsObject())
 	{
 		Error::New(env, "requires 1 arguments, first argument must a vector3").ThrowAsJavaScriptException();
 		return env.Null();
@@ -325,7 +325,7 @@ Value vector2_distance(const CallbackInfo &info)
 {
 	Env env = info.Env();
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector2").ThrowAsJavaScriptException();
 		return env.Null();
@@ -346,7 +346,7 @@ Value vector3_distance(const CallbackInfo &info)
 {
 	Env env = info.Env();
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !checkObject(info[1]))
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsObject())
 	{
 		Error::New(env, "requires 2 arguments, first and second argument must a vector3").ThrowAsJavaScriptException();
 		return env.Null();
@@ -368,7 +368,7 @@ Value vector2_closest(const CallbackInfo &info)
 {
 	Env env = info.Env();
 
-	if (info.Length() < 2 || !checkObject(info[0]) || !info[1].IsArray() || !info[2].IsBoolean())
+	if (info.Length() < 2 || !info[0].IsObject() || !info[1].IsArray() || !info[2].IsBoolean())
 	{
 		Error::New(env, "requires 2 arguments, first argument must a vector2, second argument must a array vector2, third argument must a boolean").ThrowAsJavaScriptException();
 		return env.Null();
@@ -392,7 +392,7 @@ Value vector2_closest(const CallbackInfo &info)
 		for (uint32_t i = 0; i < arg2.Length(); i++)
 		{
 			Value items = arg2.Get(i);
-			if (!checkObject(items))
+			if (!items.IsObject())
 			{
 				isNotVec2 = true;
 				break;
@@ -418,7 +418,7 @@ Value vector2_closest(const CallbackInfo &info)
 		for (uint32_t i = 0; i < arg2.Length(); i++)
 		{
 			Value items = arg2.Get(i);
-			if (!checkObject(items))
+			if (!items.IsObject())
 			{
 				isNotVec2 = true;
 				break;
@@ -452,7 +452,7 @@ Value vector3_closest(const CallbackInfo &info)
 {
 	Env env = info.Env();
 
-	if (info.Length() < 3 || !checkObject(info[0]) || !info[1].IsArray() || !info[2].IsBoolean())
+	if (info.Length() < 3 || !info[0].IsObject() || !info[1].IsArray() || !info[2].IsBoolean())
 	{
 		Error::New(env, "requires 3 arguments, first argument must a vector3, second argument must a array vector3, third argument must a boolean").ThrowAsJavaScriptException();
 		return env.Null();
@@ -476,7 +476,7 @@ Value vector3_closest(const CallbackInfo &info)
 		for (uint32_t i = 0; i < arg2.Length(); i++)
 		{
 			Value items = arg2.Get(i);
-			if (!checkObject(items))
+			if (!items.IsObject())
 			{
 				isNotVec3 = true;
 				break;
@@ -502,7 +502,7 @@ Value vector3_closest(const CallbackInfo &info)
 		for (uint32_t i = 0; i < arg2.Length(); i++)
 		{
 			Value items = arg2.Get(i);
-			if (!checkObject(items))
+			if (!items.IsObject())
 			{
 				isNotVec3 = true;
 				break;
