@@ -65,8 +65,8 @@ export default class Memory {
 		return processInfo;
 	}
 
-	closeProcess(handle: number) {
-		this.#mem.closeProcess(handle);
+	closeProcess() {
+		this.#mem.closeProcess(this.#handle);
 	}
 
 	getProcesses() {

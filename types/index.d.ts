@@ -508,7 +508,7 @@ declare class Memory {
 	};
 	Debugger: Debugger;
 	openProcess(processNameOrProcessId: string | number): processInfo;
-	closeProcess(handle: number): void;
+	closeProcess(): void;
 	getProcesses(): processInfos;
 	findModule(moduleName: string, processId: number): moduleInfo;
 	getModules(processId: number): moduleInfos;
