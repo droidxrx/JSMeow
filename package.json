@@ -1,6 +1,6 @@
 {
 	"name": "jsmeow",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"description": "NodeJS for external Game Hacking",
 	"types": "./types/index.d.ts",
 	"main": "./dist/index.commonjs.js",
