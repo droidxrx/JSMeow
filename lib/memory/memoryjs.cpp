@@ -665,6 +665,15 @@ Napi::Value writeMemory(const Napi::CallbackInfo &args)
 		// Write String, Method 2
 		Memory.writeMemory(handle, address, (char *)valueParam.data(), valueParam.size());
 	}
+	else if (!strcmp(dataType, "vector2") || !strcmp(dataType, "vec2"))
+	{
+
+		Napi::Object value = args[2].As<Napi::Object>();
+		Vector2 vector = {
+			value.Get(Napi::String::New(env, "x")).As<Napi::Number>().FloatValue(),
+			value.Get(Napi::String::New(env, "y")).As<Napi::Number>().FloatValue()};
+		Memory.writeMemory<Vector2>(handle, address, vector);
+	}
 	else if (!strcmp(dataType, "vector3") || !strcmp(dataType, "vec3"))
 	{
 
